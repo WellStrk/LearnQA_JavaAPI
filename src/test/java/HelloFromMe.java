@@ -1,4 +1,8 @@
-package PACKAGE_NAME;
+import org.junit.jupiter.api.Test;
 
-public class HelloFromMe {
+public class HelloFromMe{
+    @Test
+    public void testHelloWorld(){
+        System.out.println("Hello From Valeria");
+    }
 }
