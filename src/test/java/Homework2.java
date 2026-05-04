@@ -59,4 +59,34 @@ public class Homework2 {
                 }
             }
         }
+
+    @Test
+    public void testEx8() throws InterruptedException {
+        Response responseCreate = RestAssured
+                .get("https://playground.learnqa.ru/ajax/api/longtime_job");
+
+        JsonPath jsonPath = responseCreate.jsonPath();
+        String token = jsonPath.getString("token");
+        int seconds = jsonPath.getInt("seconds");
+        System.out.println("Токен: " + token);
+        System.out.println("Кол-во секунд: " + seconds);
+
+        Response responseBefore = RestAssured
+                .get("https://playground.learnqa.ru/ajax/api/longtime_job?token=" + token);
+
+        JsonPath jsonPathBefore = responseBefore.jsonPath();
+        String statusBefore = jsonPathBefore.getString("status");
+        System.out.println("Статус до выполнения задачи: " + statusBefore);
+
+        Thread.sleep(seconds * 1000L);
+
+        Response responseAfter = RestAssured
+                .get("https://playground.learnqa.ru/ajax/api/longtime_job?token=" + token);
+
+        JsonPath jsonPathAfter = responseAfter.jsonPath();
+        String statusAfter = jsonPathAfter.getString("status");
+        String result = jsonPathAfter.getString("result");
+        System.out.println("Статус после выполнения задачи: " + statusAfter);
+        System.out.println("Результат: " + result);
+    }
 }
