@@ -30,4 +30,33 @@ public class Homework2 {
         int statusCode = response.getStatusCode();
         System.out.println(statusCode);
     }
+
+    @Test
+    public void testEx7() {
+            String StartUrl = "https://playground.learnqa.ru/api/long_redirect";
+            int redirectCount = 0;
+
+            while (true) {
+                Response response = RestAssured
+                        .given()
+                        .redirects()
+                        .follow(false)
+                        .when()
+                        .get(StartUrl)
+                        .andReturn();
+
+                int statusCode = response.getStatusCode();
+
+                if (statusCode == 200) {
+                    System.out.println("Конечный URL: " + StartUrl);
+                    System.out.println("Количество редиректов: " + redirectCount);
+                    break;
+                } else {
+                    String locationHeader = response.getHeader("Location");
+                    System.out.println("Редирект №" + (redirectCount + 1) + ": " + locationHeader);
+                    StartUrl = locationHeader;
+                    redirectCount++;
+                }
+            }
+        }
 }
