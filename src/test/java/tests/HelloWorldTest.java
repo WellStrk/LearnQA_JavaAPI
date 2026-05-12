@@ -1,4 +1,7 @@
+package tests;
+
 import io.restassured.path.json.JsonPath;
+import lib.BaseTestCase;
 import org.junit.jupiter.api.Test;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -10,7 +13,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HelloWorldTest {
+public class HelloWorldTest extends BaseTestCase {
     @Test
     public void testGetText(){
         Response response = RestAssured

@@ -1,6 +1,9 @@
+package tests;
+
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import lib.BaseTestCase;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -9,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class Homework2 {
+public class Homework2 extends BaseTestCase {
     @Test
     public void testEx5() {
         Response response = RestAssured
