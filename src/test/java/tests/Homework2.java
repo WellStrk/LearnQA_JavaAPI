@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -43,32 +44,32 @@ public class Homework2 extends BaseTestCase {
 
     @Test
     public void testEx7() {
-            String StartUrl = "https://playground.learnqa.ru/api/long_redirect";
-            int redirectCount = 0;
+        String StartUrl = "https://playground.learnqa.ru/api/long_redirect";
+        int redirectCount = 0;
 
-            while (true) {
-                Response response = RestAssured
-                        .given()
-                        .redirects()
-                        .follow(false)
-                        .when()
-                        .get(StartUrl)
-                        .andReturn();
+        while (true) {
+            Response response = RestAssured
+                    .given()
+                    .redirects()
+                    .follow(false)
+                    .when()
+                    .get(StartUrl)
+                    .andReturn();
 
-                int statusCode = response.getStatusCode();
+            int statusCode = response.getStatusCode();
 
-                if (statusCode == 200) {
-                    System.out.println("Конечный URL: " + StartUrl);
-                    System.out.println("Количество редиректов: " + redirectCount);
-                    break;
-                } else {
-                    String locationHeader = response.getHeader("Location");
-                    System.out.println("Редирект №" + (redirectCount + 1) + ": " + locationHeader);
-                    StartUrl = locationHeader;
-                    redirectCount++;
-                }
+            if (statusCode == 200) {
+                System.out.println("Конечный URL: " + StartUrl);
+                System.out.println("Количество редиректов: " + redirectCount);
+                break;
+            } else {
+                String locationHeader = response.getHeader("Location");
+                System.out.println("Редирект №" + (redirectCount + 1) + ": " + locationHeader);
+                StartUrl = locationHeader;
+                redirectCount++;
             }
         }
+    }
 
     @Test
     public void testEx8() throws InterruptedException {
@@ -102,64 +103,86 @@ public class Homework2 extends BaseTestCase {
 
     @Test
     public void testEx9() {
-                String login = "super_admin";
-                List<String> passwords = Arrays.asList(
-                        "123456", "123456789", "qwerty", "password", "1234567",
-                        "12345678", "12345", "iloveyou", "111111", "123123",
-                        "abc123", "qwerty123", "1q2w3e4r", "admin", "qwertyuiop",
-                        "654321", "555555", "lovely", "7777777", "welcome",
-                        "888888", "princess", "dragon", "password1", "123qwe"
-                );
+        String login = "super_admin";
+        List<String> passwords = Arrays.asList(
+                "123456", "123456789", "qwerty", "password", "1234567",
+                "12345678", "12345", "iloveyou", "111111", "123123",
+                "abc123", "qwerty123", "1q2w3e4r", "admin", "qwertyuiop",
+                "654321", "555555", "lovely", "7777777", "welcome",
+                "888888", "princess", "dragon", "password1", "123qwe"
+        );
 
-                String correctPassword = null;
-                String message = null;
+        String correctPassword = null;
+        String message = null;
 
-                for (String password : passwords) {
-                    Map<String, String> data = new HashMap<>();
-                    data.put("login", login);
-                    data.put("password", password);
+        for (String password : passwords) {
+            Map<String, String> data = new HashMap<>();
+            data.put("login", login);
+            data.put("password", password);
 
-                    Response responseForGet = RestAssured
-                            .given()
-                            .body(data)
-                            .when()
-                            .post("https://playground.learnqa.ru/ajax/api/get_secret_password_homework")
-                            .andReturn();
+            Response responseForGet = RestAssured
+                    .given()
+                    .body(data)
+                    .when()
+                    .post("https://playground.learnqa.ru/ajax/api/get_secret_password_homework")
+                    .andReturn();
 
-                    String authCookie = responseForGet.getCookie("auth_cookie");
+            String authCookie = responseForGet.getCookie("auth_cookie");
 
-                    Map<String, String> cookies = new HashMap<>();
-                    if (authCookie != null) {
-                        cookies.put("auth_cookie", authCookie);
-                    }
-
-                    Response responseForCheck = RestAssured
-                            .given()
-                            .cookies(cookies)
-                            .when()
-                            .post("https://playground.learnqa.ru/ajax/api/check_auth_cookie")
-                            .andReturn();
-
-                    String responseText = responseForCheck.asString();
-
-                    if (!responseText.equals("You are NOT authorized")) {
-                        correctPassword = password;
-                        message = responseText;
-                        break;
-                    }
-                }
-
-                if (correctPassword != null) {
-                    System.out.println("Верный пароль: " + correctPassword);
-                    System.out.println("Сообщение: " + message);
-                } else {
-                    System.out.println("Правильного пароля нет в списке");
-                }
+            Map<String, String> cookies = new HashMap<>();
+            if (authCookie != null) {
+                cookies.put("auth_cookie", authCookie);
             }
 
+            Response responseForCheck = RestAssured
+                    .given()
+                    .cookies(cookies)
+                    .when()
+                    .post("https://playground.learnqa.ru/ajax/api/check_auth_cookie")
+                    .andReturn();
+
+            String responseText = responseForCheck.asString();
+
+            if (!responseText.equals("You are NOT authorized")) {
+                correctPassword = password;
+                message = responseText;
+                break;
+            }
+        }
+
+        if (correctPassword != null) {
+            System.out.println("Верный пароль: " + correctPassword);
+            System.out.println("Сообщение: " + message);
+        } else {
+            System.out.println("Правильного пароля нет в списке");
+        }
+    }
+
     @Test
-    public void testStringLength() {
+    public void Ex10() {
         String hello = "Hello, world!";
         assertTrue(hello.length() > 15);
     }
-        }
+
+
+    @Test
+    public void Ex11() {
+        Response response = RestAssured
+                .given()
+                .when()
+                .get("https://playground.learnqa.ru/api/homework_cookie")
+                .andReturn();
+
+        Map<String, String> cookies = response.getCookies();
+
+        String cookieName = cookies.keySet().iterator().next();
+        String cookieValue = this.getCookie(response, cookieName);
+
+        System.out.println(cookieName);
+        System.out.println(cookieValue);
+
+        assertEquals("HomeWork", cookieName);
+        assertEquals("hw_value", cookieValue);
+    }
+}
+
