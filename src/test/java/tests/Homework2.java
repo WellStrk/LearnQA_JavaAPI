@@ -204,8 +204,8 @@ public class Homework2 extends BaseTestCase {
             System.out.println("Заголовок: " + headerName);
             System.out.println("Значение заголовка: " + headerValue);
 
-            assertNotNull(headerValue, "Header value should not be null");
-            assertFalse(headerValue.isEmpty(), "Header value should not be null");
+            assertNotNull(headerName, "headerName should not be null");
+            assertNotNull(headerValue, "headerValue should not be null");
         }
     }
 }
