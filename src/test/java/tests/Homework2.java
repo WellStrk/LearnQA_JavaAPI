@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class Homework2 extends BaseTestCase {
     @Test
@@ -154,4 +156,10 @@ public class Homework2 extends BaseTestCase {
                     System.out.println("Правильного пароля нет в списке");
                 }
             }
+
+    @Test
+    public void testStringLength() {
+        String hello = "Hello, world!";
+        assertTrue(hello.length() > 15);
+    }
         }
