@@ -5,14 +5,15 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import lib.BaseTestCase;
 import org.junit.jupiter.api.Test;
+import io.restassured.http.Headers;
+import io.restassured.http.Header;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class Homework2 extends BaseTestCase {
@@ -183,6 +184,29 @@ public class Homework2 extends BaseTestCase {
 
         assertEquals("HomeWork", cookieName);
         assertEquals("hw_value", cookieValue);
+    }
+
+
+    @Test
+    public void Ex12() {
+        Response response = RestAssured
+                .given()
+                .when()
+                .get("https://playground.learnqa.ru/api/homework_header")
+                .andReturn();
+
+        Headers headers = response.getHeaders();
+
+        for (Header header : headers) {
+            String headerName = header.getName();
+            String headerValue = header.getValue();
+
+            System.out.println("Заголовок: " + headerName);
+            System.out.println("Значение заголовка: " + headerValue);
+
+            assertNotNull(headerValue, "Header value should not be null");
+            assertFalse(headerValue.isEmpty(), "Header value should not be null");
+        }
     }
 }
 
