@@ -1,8 +1,6 @@
 package tests;
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
+
+import io.qameta.allure.*;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -11,6 +9,7 @@ import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerate;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +17,10 @@ import java.util.Map;
 
 @Epic("User editing")
 @Feature("User data editing")
+@Owner("Valeria A.")
+@Severity(SeverityLevel.CRITICAL)
+@Link(name = "Open user API", url = "https://playground.learnqa.ru/api/map")
+@Tag("edit")
 public class UserEditTest extends BaseTestCase {
 
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
@@ -27,13 +30,16 @@ public class UserEditTest extends BaseTestCase {
     @Description("This test successfully edits just created user")
     @DisplayName("Test positive edit user")
     @Story("As an authorized user, I can edit my own data")
+    @Tag("positive")
+    @Tag("smoke")
+    @Tag("happy-path")
     public void testEditJustCreateTest() {
 //GENERATE USER
         Map<String, String> userData = DataGenerate.getRegistrationData();
         JsonPath responseCreateAuth = RestAssured
                 .given()
                 .body(userData)
-                .post("https://playground.learnqa.ru/api/user/")
+                .post(url)
                 .jsonPath();
 
         String userId = responseCreateAuth.getString("id");
@@ -45,7 +51,7 @@ public class UserEditTest extends BaseTestCase {
         Response responseGetAuth = RestAssured
                 .given()
                 .body(authData)
-                .post("https://playground.learnqa.ru/api/user/login")
+                .post(url + "login")
                 .andReturn();
 //EDIT
         String newName = "Changed Name";
@@ -57,14 +63,14 @@ public class UserEditTest extends BaseTestCase {
                 .header("x-csrf-token", this.getHeader(responseGetAuth, "x-csrf-token"))
                 .cookie("auth_sid", this.getCookie(responseGetAuth, "auth_sid"))
                 .body(editData)
-                .put("https://playground.learnqa.ru/api/user/" + userId)
+                .put(url + userId)
                 .andReturn();
 //GET
         Response responseUserData = RestAssured
                 .given()
                 .header("x-csrf-token", this.getHeader(responseGetAuth, "x-csrf-token"))
                 .cookie("auth_sid", this.getCookie(responseGetAuth, "auth_sid"))
-                .get("https://playground.learnqa.ru/api/user/" + userId)
+                .get(url + userId)
                 .andReturn();
         Assertions.assertJsonByName(responseUserData, "firstName", newName);
     }
@@ -73,6 +79,9 @@ public class UserEditTest extends BaseTestCase {
     @Description("Attempt to edit user data without being authorized")
     @DisplayName("Test edit user without authorization")
     @Story("As an unauthorized user, I cannot edit any user data")
+    @Tag("negative")
+    @Tag("authorization")
+    @Tag("security")
     public void testEditUserUnauthorized() {
         // CREATE NEW USER
         Response responseCreateUser = apiCoreRequests.createUser(url);
@@ -95,6 +104,10 @@ public class UserEditTest extends BaseTestCase {
     @Description("Attempt to edit user data while being authorized as another user")
     @DisplayName("Test edit user data as another user")
     @Story("As an authorized user, I cannot edit data of another user")
+    @Tag("negative")
+    @Tag("authorization")
+    @Tag("security")
+    @Tag("privacy")
     public void testEditUserAsAnotherUser() {
 
         //CREATE FIRST USER (FOR CHANGING)
@@ -137,6 +150,8 @@ public class UserEditTest extends BaseTestCase {
     @Description("Attempt to change email to invalid format (without '@') while being authorized as the same user")
     @DisplayName("Test edit user with invalid email")
     @Story("As an authorized user, I cannot change my email to an invalid format (without '@')")
+    @Tag("negative")
+    @Tag("validation")
     public void testEditUserWithInvalidEmail() {
 
         //CREATE NEW USER
@@ -176,6 +191,9 @@ public class UserEditTest extends BaseTestCase {
     @Description("Attempt to change firstName to very short value (1 symbol) while being authorized as the same user")
     @DisplayName("Test edit user with too short first name")
     @Story("As an authorized user, I cannot change my first name to a value that is too short (1 symbol)")
+    @Tag("negative")
+    @Tag("validation")
+    @Tag("boundary-testing")
     public void testEditUserWithShortFirstName() {
         //CREATE NEW USER
         Map<String, String> userData = DataGenerate.getRegistrationData();

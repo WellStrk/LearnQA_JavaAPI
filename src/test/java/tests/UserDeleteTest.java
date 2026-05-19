@@ -1,21 +1,23 @@
 package tests;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerate;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-@Epic("User management")
-@Feature("User deletion")
+@Epic("User deletion")
+@Feature("User data deletion")
+@Owner("Valeria A.")
+@Severity(SeverityLevel.CRITICAL)
+@Link(name = "Open user API", url = "https://playground.learnqa.ru/api/map")
+@Tag("delete")
 public class UserDeleteTest extends BaseTestCase {
 
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
@@ -25,6 +27,8 @@ public class UserDeleteTest extends BaseTestCase {
     @Description("Attempt to delete user with ID 2 while being authorized as vinkotov@example.com")
     @DisplayName("Test delete user ID 2")
     @Story("As an authorized user, I cannot delete test user's account")
+    @Tag("negative")
+    @Tag("security")
     public void testDeleteUserWithId2() {
 
         //AUTH DEFAULT USER
@@ -49,6 +53,9 @@ public class UserDeleteTest extends BaseTestCase {
     @Description("Create a new user, authorize, delete it, and verify it's gone")
     @DisplayName("Test positive delete user")
     @Story("As an authorized user, I can delete my own account")
+    @Tag("positive")
+    @Tag("smoke")
+    @Tag("happy-path")
     public void testDeleteUserPositive() {
 
         // CREATE NEW USER
@@ -96,6 +103,10 @@ public class UserDeleteTest extends BaseTestCase {
     @Description("Create two users, authorize as second user, try to delete first user")
     @DisplayName("Test delete user as another user")
     @Story("As an authorized user, I cannot delete another user's account")
+    @Tag("negative")
+    @Tag("security")
+    @Tag("authorization")
+    @Tag("privacy")
     public void testDeleteUserAsAnotherUser() {
 
         //CREATE NEW USER (TO DELETE)

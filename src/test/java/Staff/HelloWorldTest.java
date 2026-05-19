@@ -1,4 +1,4 @@
-package tests;
+package Staff;
 
 import io.restassured.path.json.JsonPath;
 import lib.BaseTestCase;
