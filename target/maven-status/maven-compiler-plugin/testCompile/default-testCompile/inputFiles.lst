@@ -1,1 +1,10 @@
-A:\Projects\kurs2\LearnQA_JavaAPI\src\test\java\HelloWorldTest.java
+/tests/src/test/java/tests/UserEditTest.java
+/tests/src/test/java/tests/UserAuthTest.java
+/tests/src/test/java/tests/UserGetTest.java
+/tests/src/test/java/lib/Assertions.java
+/tests/src/test/java/lib/DataGenerate.java
+/tests/src/test/java/lib/BaseTestCase.java
+/tests/src/test/java/lib/ApiCoreRequests.java
+/tests/src/test/java/tests/Homework2.java
+/tests/src/test/java/tests/UserRegisterTest.java
+/tests/src/test/java/tests/HelloWorldTest.java

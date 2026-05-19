@@ -1,1 +1,10 @@
-HelloWorldTest.class
+tests/Homework2.class
+tests/UserEditTest.class
+lib/ApiCoreRequests.class
+lib/BaseTestCase.class
+lib/DataGenerate.class
+tests/UserRegisterTest.class
+tests/UserAuthTest.class
+tests/UserGetTest.class
+tests/HelloWorldTest.class
+lib/Assertions.class
