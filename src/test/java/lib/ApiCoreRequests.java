@@ -128,5 +128,51 @@ public class ApiCoreRequests {
                 .post(url)
                 .andReturn();
     }
+
+    @Step("Make a PUT-request to edit user with ID: {userId} using auth cookie and token")
+    public Response editUser(String url, int userId, Map<String, String> editData, String cookie, String token) {
+        return given()
+                .filter(new AllureRestAssured())
+                .header("x-csrf-token", token)
+                .cookie("auth_sid", cookie)
+                .body(editData)
+                .put(url + userId)
+                .andReturn();
+    }
+
+    @Step("Make a PUT-request to edit user without authorization")
+    public Response editUserUnauthorized(String url, int userId, Map<String, String> editData) {
+        return given()
+                .filter(new AllureRestAssured())
+                .body(editData)
+                .put(url + userId)
+                .andReturn();
+    }
+
+    @Step("Make a PUT-request to edit user with invalid data (no '@' in email)")
+    public Response editUserWithInvalidEmail(String url, int userId, String invalidEmail, String cookie, String token) {
+        Map<String, String> editData = new HashMap<>();
+        editData.put("email", invalidEmail);
+        return given()
+                .filter(new AllureRestAssured())
+                .header("x-csrf-token", token)
+                .cookie("auth_sid", cookie)
+                .body(editData)
+                .put(url + userId)
+                .andReturn();
+    }
+
+    @Step("Make a PUT-request to edit user with too short first name (1 symbol)")
+    public Response editUserWithShortFirstName(String url, int userId, String shortFirstName, String cookie, String token) {
+        Map<String, String> editData = new HashMap<>();
+        editData.put("firstName", shortFirstName);
+        return given()
+                .filter(new AllureRestAssured())
+                .header("x-csrf-token", token)
+                .cookie("auth_sid", cookie)
+                .body(editData)
+                .put(url + userId)
+                .andReturn();
+    }
     }
 
