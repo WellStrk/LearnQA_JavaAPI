@@ -1,5 +1,6 @@
 package tests;
 
+import io.qameta.allure.Story;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import lib.Assertions;
@@ -25,6 +26,9 @@ public class UserRegisterTest extends BaseTestCase {
     private static final String url = "https://playground.learnqa.ru/api/user/";
 
     @Test
+    @Description("This test verifies that user cannot register with an email that already exists")
+    @DisplayName("Test registration with existing email")
+    @Story("As a new user, I cannot register with an email that is already taken")
     public void testCreateUserWithExistingEmail() {
         String email = "vinkotov@example.com";
 
@@ -44,6 +48,9 @@ public class UserRegisterTest extends BaseTestCase {
 
 
     @Test
+    @Description("This test verifies successful user registration with valid data")
+    @DisplayName("Test registration with valid data")
+    @Story("As a new user, I can successfully register with valid email and password")
     public void testCreateNewUser() {
         String email = DataGenerate.getRandomEmail();
 
@@ -62,6 +69,7 @@ public class UserRegisterTest extends BaseTestCase {
     @Test
     @Description("Test registration with email missing '@' symbol")
     @DisplayName("Test registration with invalid email")
+    @Story("As a new user, I cannot register with an email that does not contain '@'")
     public void testCreateUserWithInvalidEmail() {
         String invalidEmail = DataGenerate.getRandomEmail().replace("@", "");
 
@@ -75,6 +83,7 @@ public class UserRegisterTest extends BaseTestCase {
     @ValueSource(strings = {"password", "username", "firstName", "lastName"})
     @Description("Test registration without one required field")
     @DisplayName("Test registration with missing required field")
+    @Story("As a new user, I cannot register without providing all required fields")
     public void testCreateUserWithoutAnyField(String missingField) {
 
         Response response = apiCoreRequests.createUserWithoutField(url, missingField);
@@ -87,6 +96,7 @@ public class UserRegisterTest extends BaseTestCase {
     @Test
     @Description("Test registration with very short username (1 symbol)")
     @DisplayName("Test registration with short username")
+    @Story("As a new user, I cannot register with a username that is too short (1 symbol)")
     public void testCreateUserWithVeryShortUsername() {
 
         Response response = apiCoreRequests.createUserWithShortUsername(url);
@@ -100,6 +110,7 @@ public class UserRegisterTest extends BaseTestCase {
     @Test
     @Description("Test registration with very long username (more than 250 symbols)")
     @DisplayName("Test registration with long username")
+    @Story("As a new user, I cannot register with a username that exceeds maximum length (250 symbols)")
     public void testCreateUserWithVeryLongUsername() {
 
         Response response = apiCoreRequests.createUserWithLongUsername(url);

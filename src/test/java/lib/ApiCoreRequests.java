@@ -4,6 +4,8 @@ import io.qameta.allure.Step;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
+
+import java.util.HashMap;
 import java.util.Map;
 import static io.restassured.RestAssured.given;
 
@@ -88,6 +90,38 @@ public class ApiCoreRequests {
         Map<String, String> userData = DataGenerate.getRegistrationData(
                 Map.of("username", longUsername)
         );
+        return given()
+                .filter(new AllureRestAssured())
+                .body(userData)
+                .post(url)
+                .andReturn();
+    }
+
+    @Step("Login as user and get auth cookie and token")
+    public Response loginUser(String email, String password) {
+        Map<String, String> authData = new HashMap<>();
+        authData.put("email", email);
+        authData.put("password", password);
+        return given()
+                .filter(new AllureRestAssured())
+                .body(authData)
+                .post("https://playground.learnqa.ru/api/user/login")
+                .andReturn();
+    }
+
+    @Step("Get user data by ID: userId' using auth cookie and token")
+    public Response getUserDataById(String url, int userId, String cookie, String token) {
+        return given()
+                .filter(new AllureRestAssured())
+                .header("x-csrf-token", token)
+                .cookie("auth_sid", cookie)
+                .get(url + userId)
+                .andReturn();
+    }
+
+    @Step("Create new user with random data")
+    public Response createUser(String url) {
+        Map<String, String> userData = DataGenerate.getRegistrationData();
         return given()
                 .filter(new AllureRestAssured())
                 .body(userData)
