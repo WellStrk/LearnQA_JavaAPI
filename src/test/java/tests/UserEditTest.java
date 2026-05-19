@@ -97,13 +97,13 @@ public class UserEditTest extends BaseTestCase {
     @Story("As an authorized user, I cannot edit data of another user")
     public void testEditUserAsAnotherUser() {
 
-        //CREATE NEW USER (FOR CHANGING)
+        //CREATE FIRST USER (FOR CHANGING)
         Response responseCreateUserToEdit = apiCoreRequests.createUser(url);
         Assertions.assertResponseCodeEquals(responseCreateUserToEdit, 200);
         Assertions.assertJsonHasField(responseCreateUserToEdit, "id");
         String userIdToEdit = responseCreateUserToEdit.jsonPath().getString("id");
 
-        //CREATE NEW USER (FOR AUTH)
+        //CREATE SECOND USER (FOR AUTH)
         Map<String, String> secondUserData = DataGenerate.getRegistrationData();
         Response responseCreateSecondUser = apiCoreRequests.makePostRequest(url, secondUserData);
         Assertions.assertResponseCodeEquals(responseCreateSecondUser, 200);

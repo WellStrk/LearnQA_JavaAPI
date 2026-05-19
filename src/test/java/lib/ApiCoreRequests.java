@@ -129,7 +129,7 @@ public class ApiCoreRequests {
                 .andReturn();
     }
 
-    @Step("Make a PUT-request to edit user with ID: {userId} using auth cookie and token")
+    @Step("Make a PUT-request to edit user with ID: 'userId' using auth cookie and token")
     public Response editUser(String url, int userId, Map<String, String> editData, String cookie, String token) {
         return given()
                 .filter(new AllureRestAssured())
@@ -172,6 +172,26 @@ public class ApiCoreRequests {
                 .cookie("auth_sid", cookie)
                 .body(editData)
                 .put(url + userId)
+                .andReturn();
+    }
+
+    @Step("Make a DELETE-request to delete user with ID: 'userId' using auth cookie and token")
+    public Response deleteUser(String url, int userId, String cookie, String token) {
+        return given()
+                .filter(new AllureRestAssured())
+                .header("x-csrf-token", token)
+                .cookie("auth_sid", cookie)
+                .delete(url + userId)
+                .andReturn();
+    }
+
+    @Step("Make a DELETE-request to delete user as another user")
+    public Response deleteUserAsAnotherUser(String url, int userId, String cookie, String token) {
+        return given()
+                .filter(new AllureRestAssured())
+                .header("x-csrf-token", token)
+                .cookie("auth_sid", cookie)
+                .delete(url + userId)
                 .andReturn();
     }
     }

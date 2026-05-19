@@ -163,7 +163,7 @@ public class Homework2 extends BaseTestCase {
 
     @Test
     public void Ex10() {
-        String hello = "Hello, world!";
+        String hello = "Hello, world4343!";
         assertTrue(hello.length() > 15);
     }
 
